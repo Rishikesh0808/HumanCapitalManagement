@@ -64,7 +64,7 @@ public class EmployeeAssignmentLeave {
         return employeeAssignmentId;
     }
 
-    public void setEmployeeId(Integer employeeId) {
+    public void setEmployeeAssignmentId(Integer employeeAssignmentId) {
         this.employeeAssignmentId = employeeAssignmentId;
     }
 

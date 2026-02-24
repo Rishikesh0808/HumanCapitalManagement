@@ -2,6 +2,8 @@ package com.project.hcm.controller;
 
 import com.project.hcm.model.EmployeeAssignmentLeave;
 import com.project.hcm.model.LeaveType;
+import com.project.hcm.dto.request.ApplyLeaveRequest;
+import com.project.hcm.dto.request.ApproveLeaveRequest;
 import com.project.hcm.service.EmployeeAssignmentLeaveService;
 import com.project.hcm.service.LeaveTypeService;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +26,10 @@ public class LeaveManagementController {
     public List<LeaveType> getAllLeaveTypes() {
         return leaveTypeService.getAllLeaveTypes();
     }
+
     @PostMapping("/leave")
-    public EmployeeAssignmentLeave addLeave(@RequestBody EmployeeAssignmentLeave leave) {
-        return employeeAssignmentLeaveService.create(leave);
+    public EmployeeAssignmentLeave addLeave(@RequestBody ApplyLeaveRequest request) {
+        return employeeAssignmentLeaveService.create(request);
     }
 
     @GetMapping("/leaves/employee/{employeeId}")
@@ -34,4 +37,8 @@ public class LeaveManagementController {
         return employeeAssignmentLeaveService.getByEmployeeId(employeeId);
     }
 
+    @PostMapping("/approve")
+    public EmployeeAssignmentLeave approveLeave(@RequestBody ApproveLeaveRequest request) {
+        return employeeAssignmentLeaveService.approveLeave(request.getLeaveId(), request.getApprovedBy());
+    }
 }

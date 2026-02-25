@@ -83,4 +83,37 @@ public class EmployeeAssignmentLeaveService {
         leave.setRejectionReason(null);
         return employeeAssignmentLeaveRepository.save(leave);
     }
+
+    public EmployeeAssignmentLeave cancelLeaveByEmployee(Integer leaveId, Integer employeeAssignmentId) {
+        if (leaveId == null || employeeAssignmentId == null) {
+            throw new ResponseStatusException(BAD_REQUEST, "leaveId and employeeAssignmentId are required");
+        }
+
+        EmployeeAssignmentLeave leave = employeeAssignmentLeaveRepository.findById(leaveId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Leave not found for id: " + leaveId));
+
+        if (!employeeAssignmentId.equals(leave.getEmployeeAssignmentId())) {
+            throw new ResponseStatusException(CONFLICT, "You cannot cancel this leave");
+        }
+
+        LeaveStatus currentStatus;
+        try {
+            currentStatus = LeaveStatus.mapEnumsFromDbValue(leave.getStatus());
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(CONFLICT, "Leave has an unsupported status: " + leave.getStatus());
+        }
+
+        if (LeaveStatus.CANCELLED.equals(currentStatus)) {
+            return leave;
+        }
+        if (!LeaveStatus.PENDING.equals(currentStatus)) {
+            throw new ResponseStatusException(CONFLICT, "Only pending leaves can be cancelled");
+        }
+
+        leave.setStatus(LeaveStatus.CANCELLED.getDbValue());
+        leave.setApprovedBy(null);
+        leave.setApprovedAt(null);
+        leave.setRejectionReason(null);
+        return employeeAssignmentLeaveRepository.save(leave);
+    }
 }

@@ -3,7 +3,8 @@ package com.project.hcm.enums;
 public enum LeaveStatus {
     PENDING("Pending"),
     APPROVED("Approved"),
-    REJECTED("Rejected");
+    REJECTED("Rejected"),
+    CANCELLED("Cancelled");
 
     private final String dbValue;
 

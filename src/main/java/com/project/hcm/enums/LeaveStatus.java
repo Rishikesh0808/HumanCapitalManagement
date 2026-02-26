@@ -1,30 +1,40 @@
 package com.project.hcm.enums;
 
 public enum LeaveStatus {
-    PENDING("Pending"),
-    APPROVED("Approved"),
-    REJECTED("Rejected"),
-    CANCELLED("Cancelled");
 
-    private final String dbValue;
+    PENDING("P", "Pending"),
+    APPROVED("A", "Approved"),
+    REJECTED("R", "Rejected"),
+    CANCELLED("C", "Cancelled");
 
-    LeaveStatus(String dbValue) {
-        this.dbValue = dbValue;
+    private final String code;
+    private final String description;
+
+    LeaveStatus(String code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public String getDbValue() {
-        return dbValue;
+        return code;
     }
 
-    public static LeaveStatus mapEnumsFromDbValue(String value) {
-        if (value == null) {
-            return null;
-        }
+    public String getDescription() {
+        return description;
+    }
+
+    public static LeaveStatus fromCode(String code) {
+        if (code == null) return null;
+
         for (LeaveStatus status : values()) {
-            if (status.dbValue.equalsIgnoreCase(value)) {
+            if (status.code.equalsIgnoreCase(code)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Unknown leave status: " + value);
+        throw new IllegalArgumentException("Unknown leave status code: " + code);
     }
 }

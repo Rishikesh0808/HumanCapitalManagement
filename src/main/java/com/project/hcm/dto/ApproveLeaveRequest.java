@@ -1,4 +1,4 @@
-package com.project.hcm.dto.request;
+package com.project.hcm.dto;
 
 public class ApproveLeaveRequest {
     private Integer leaveId;

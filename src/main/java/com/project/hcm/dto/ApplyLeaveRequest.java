@@ -1,4 +1,4 @@
-package com.project.hcm.dto.request;
+package com.project.hcm.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

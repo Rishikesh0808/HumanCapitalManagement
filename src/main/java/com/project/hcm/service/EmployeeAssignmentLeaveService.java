@@ -2,14 +2,14 @@ package com.project.hcm.service;
 
 import com.project.hcm.model.EmployeeAssignmentLeave;
 import com.project.hcm.enums.LeaveStatus;
-import com.project.hcm.dto.request.ApplyLeaveRequest;
+import com.project.hcm.dto.ApplyLeaveRequest;
 import com.project.hcm.repo.EmployeeAssignmentLeaveRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -34,7 +34,7 @@ public class EmployeeAssignmentLeaveService {
         leave.setEndDate(request.getEndDate());
         leave.setTotalDays(request.getTotalDays());
         leave.setReason(request.getReason());
-        leave.setStatus(LeaveStatus.PENDING.getDbValue());
+        leave.setStatus(LeaveStatus.PENDING.getCode());
 
         if (leave.getEmployeeAssignmentId() == null
                 || leave.getLeaveTypeId() == null
@@ -65,7 +65,7 @@ public class EmployeeAssignmentLeaveService {
 
         LeaveStatus currentStatus;
         try {
-            currentStatus = LeaveStatus.mapEnumsFromDbValue(leave.getStatus());
+            currentStatus = LeaveStatus.fromCode(leave.getStatus());
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(CONFLICT, "Leave has an unsupported status: " + leave.getStatus());
         }
@@ -77,7 +77,7 @@ public class EmployeeAssignmentLeaveService {
             throw new ResponseStatusException(CONFLICT, "Only pending leaves can be approved");
         }
 
-        leave.setStatus(LeaveStatus.APPROVED.getDbValue());
+        leave.setStatus(LeaveStatus.APPROVED.getCode());
         leave.setApprovedBy(approvedBy);
         leave.setApprovedAt(LocalDateTime.now());
         leave.setRejectionReason(null);
@@ -93,12 +93,12 @@ public class EmployeeAssignmentLeaveService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Leave not found for id: " + leaveId));
 
         if (!employeeAssignmentId.equals(leave.getEmployeeAssignmentId())) {
-            throw new ResponseStatusException(CONFLICT, "You cannot cancel this leave");
+            throw new ResponseStatusException(FORBIDDEN, "You cannot cancel this leave");
         }
 
         LeaveStatus currentStatus;
         try {
-            currentStatus = LeaveStatus.mapEnumsFromDbValue(leave.getStatus());
+            currentStatus = LeaveStatus.fromCode(leave.getStatus());
         } catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(CONFLICT, "Leave has an unsupported status: " + leave.getStatus());
         }
@@ -110,7 +110,7 @@ public class EmployeeAssignmentLeaveService {
             throw new ResponseStatusException(CONFLICT, "Only pending leaves can be cancelled");
         }
 
-        leave.setStatus(LeaveStatus.CANCELLED.getDbValue());
+        leave.setStatus(LeaveStatus.CANCELLED.getCode());
         leave.setApprovedBy(null);
         leave.setApprovedAt(null);
         leave.setRejectionReason(null);

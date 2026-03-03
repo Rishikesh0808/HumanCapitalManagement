@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EmployeeAssignmentLeaveRepository extends JpaRepository<EmployeeAssignmentLeave, Integer> {
-    List<EmployeeAssignmentLeave> findByEmployeeAssignmentId(Integer employeeId);
+    List<EmployeeAssignmentLeave> findByEmployeeAssignment_AssignmentId(Integer employeeAssignmentId);
 }

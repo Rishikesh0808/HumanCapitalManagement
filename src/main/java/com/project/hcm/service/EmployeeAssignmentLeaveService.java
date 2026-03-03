@@ -1,9 +1,13 @@
 package com.project.hcm.service;
 
 import com.project.hcm.model.EmployeeAssignmentLeave;
+import com.project.hcm.model.EmployeeAssignment;
+import com.project.hcm.model.LeaveType;
 import com.project.hcm.enums.LeaveStatus;
 import com.project.hcm.dto.ApplyLeaveRequest;
+import com.project.hcm.repo.EmployeeAssignmentRepository;
 import com.project.hcm.repo.EmployeeAssignmentLeaveRepository;
+import com.project.hcm.repo.LeaveTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,9 +21,17 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Service
 public class EmployeeAssignmentLeaveService {
     private final EmployeeAssignmentLeaveRepository employeeAssignmentLeaveRepository;
+    private final EmployeeAssignmentRepository employeeAssignmentRepository;
+    private final LeaveTypeRepository leaveTypeRepository;
 
-    public EmployeeAssignmentLeaveService(EmployeeAssignmentLeaveRepository employeeAssignmentLeaveRepository) {
+    public EmployeeAssignmentLeaveService(
+            EmployeeAssignmentLeaveRepository employeeAssignmentLeaveRepository,
+            EmployeeAssignmentRepository employeeAssignmentRepository,
+            LeaveTypeRepository leaveTypeRepository
+    ) {
         this.employeeAssignmentLeaveRepository = employeeAssignmentLeaveRepository;
+        this.employeeAssignmentRepository = employeeAssignmentRepository;
+        this.leaveTypeRepository = leaveTypeRepository;
     }
 
     public EmployeeAssignmentLeave create(ApplyLeaveRequest request) {
@@ -48,11 +60,22 @@ public class EmployeeAssignmentLeaveService {
         if (leave.getAppliedAt() == null) {
             leave.setAppliedAt(LocalDateTime.now());
         }
+
+        EmployeeAssignment assignment = employeeAssignmentRepository.findById(request.getEmployeeAssignmentId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        NOT_FOUND, "Employee assignment not found for id: " + request.getEmployeeAssignmentId()));
+        LeaveType leaveType = leaveTypeRepository.findById(request.getLeaveTypeId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        NOT_FOUND, "Leave type not found for id: " + request.getLeaveTypeId()));
+
+        leave.setEmployeeAssignment(assignment);
+        leave.setLeaveType(leaveType);
+
         return employeeAssignmentLeaveRepository.save(leave);
     }
 
     public List<EmployeeAssignmentLeave> getByEmployeeId(Integer employeeId) {
-        return employeeAssignmentLeaveRepository.findByEmployeeAssignmentId(employeeId);
+        return employeeAssignmentLeaveRepository.findByEmployeeAssignment_AssignmentId(employeeId);
     }
 
     public EmployeeAssignmentLeave approveLeave(Integer leaveId, Integer approvedBy) {

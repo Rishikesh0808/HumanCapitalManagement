@@ -1,11 +1,6 @@
 package com.project.hcm.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,11 +14,23 @@ public class EmployeeAssignmentLeave {
     @Column(name = "leave_id", nullable = false)
     private Integer leaveId;
 
-    @Column(name = "employee_assignment_id", nullable = false)
-    private Integer employeeAssignmentId;
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "employee_assignment_id",
+            nullable = false,
+            referencedColumnName = "assignment_id",
+            foreignKey = @ForeignKey(name = "employee_assignment_leave_employee_assignment_id_fkey")
+    )
+    private EmployeeAssignment employeeAssignment;
 
-    @Column(name = "leave_type_id", nullable = false)
-    private Integer leaveTypeId;
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "leave_type_id",
+            nullable = false,
+            referencedColumnName = "leave_type_id",
+            foreignKey = @ForeignKey(name = "employee_assignment_leave_leave_type_id_fkey")
+    )
+    private LeaveType leaveType;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -61,19 +68,47 @@ public class EmployeeAssignmentLeave {
     }
 
     public Integer getEmployeeAssignmentId() {
-        return employeeAssignmentId;
+        return employeeAssignment != null ? employeeAssignment.getAssignmentId() : null;
     }
 
     public void setEmployeeAssignmentId(Integer employeeAssignmentId) {
-        this.employeeAssignmentId = employeeAssignmentId;
+        if (employeeAssignmentId == null) {
+            this.employeeAssignment = null;
+            return;
+        }
+        EmployeeAssignment assignment = new EmployeeAssignment();
+        assignment.setAssignmentId(employeeAssignmentId);
+        this.employeeAssignment = assignment;
     }
 
     public Integer getLeaveTypeId() {
-        return leaveTypeId;
+        return leaveType != null ? leaveType.getLeaveTypeId() : null;
     }
 
     public void setLeaveTypeId(Integer leaveTypeId) {
-        this.leaveTypeId = leaveTypeId;
+        if (leaveTypeId == null) {
+            this.leaveType = null;
+            return;
+        }
+        LeaveType type = new LeaveType();
+        type.setLeaveTypeId(leaveTypeId);
+        this.leaveType = type;
+    }
+
+    public EmployeeAssignment getEmployeeAssignment() {
+        return employeeAssignment;
+    }
+
+    public void setEmployeeAssignment(EmployeeAssignment employeeAssignment) {
+        this.employeeAssignment = employeeAssignment;
+    }
+
+    public LeaveType getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(LeaveType leaveType) {
+        this.leaveType = leaveType;
     }
 
     public LocalDate getStartDate() {

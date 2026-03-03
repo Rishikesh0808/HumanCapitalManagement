@@ -2,6 +2,9 @@ package com.project.hcm.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "leave_type")
 public class LeaveType {
@@ -29,6 +32,9 @@ public class LeaveType {
 
     @Column(name = "requires_document")
     private Boolean requiresDocument;
+
+    @OneToMany(mappedBy = "leaveType")
+    private List<EmployeeAssignmentLeave> leaves = new ArrayList<>();
 
     public String getLeaveCode() {
         return leaveCode;
@@ -92,5 +98,13 @@ public class LeaveType {
 
     public void setLeaveTypeId(int leaveTypeId) {
         this.leaveTypeId = leaveTypeId;
+    }
+
+    public List<EmployeeAssignmentLeave> getLeaves() {
+        return leaves;
+    }
+
+    public void setLeaves(List<EmployeeAssignmentLeave> leaves) {
+        this.leaves = leaves;
     }
 }

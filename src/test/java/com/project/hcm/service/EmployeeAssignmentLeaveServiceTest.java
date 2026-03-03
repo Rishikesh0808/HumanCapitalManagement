@@ -2,7 +2,9 @@ package com.project.hcm.service;
 
 import com.project.hcm.enums.LeaveStatus;
 import com.project.hcm.model.EmployeeAssignmentLeave;
+import com.project.hcm.repo.EmployeeAssignmentRepository;
 import com.project.hcm.repo.EmployeeAssignmentLeaveRepository;
+import com.project.hcm.repo.LeaveTypeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +27,10 @@ import static org.mockito.Mockito.when;
 class EmployeeAssignmentLeaveServiceTest {
     @Mock
     private EmployeeAssignmentLeaveRepository repository;
+    @Mock
+    private EmployeeAssignmentRepository employeeAssignmentRepository;
+    @Mock
+    private LeaveTypeRepository leaveTypeRepository;
 
     @InjectMocks
     private EmployeeAssignmentLeaveService service;

@@ -8,6 +8,7 @@ import com.project.hcm.model.EmployeeAssignmentLeave;
 import com.project.hcm.repo.EmployeeAssignmentRepository;
 import com.project.hcm.repo.EmployeeAssignmentLeaveRepository;
 import com.project.hcm.repo.LeaveTypeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,9 +40,15 @@ class EmployeeAssignmentLeaveServiceTest {
     @InjectMocks
     private EmployeeAssignmentLeaveService service;
 
+    EmployeeAssignmentLeave leave;
+    @BeforeEach
+    public void setUp() {
+        leave = new EmployeeAssignmentLeave();
+    }
+
     @Test
     void cancelLeaveByEmployee_whenPendingAndOwner_updatesStatus() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(1);
         leave.setEmployeeAssignmentId(100);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -61,7 +68,6 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void cancelLeaveByEmployee_whenAlreadyCancelled_returnsAsIs() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
         leave.setLeaveId(2);
         leave.setEmployeeAssignmentId(100);
         leave.setStatus(LeaveStatus.CANCELLED.getDbValue());
@@ -76,7 +82,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void cancelLeaveByEmployee_whenNotOwner_throwsForbidden() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(3);
         leave.setEmployeeAssignmentId(200);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -91,7 +97,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void cancelLeaveByEmployee_whenStatusApproved_throwsConflict() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(4);
         leave.setEmployeeAssignmentId(100);
         leave.setStatus(LeaveStatus.APPROVED.getDbValue());
@@ -113,7 +119,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void approveLeave_whenPendingAndApprovedByManager_updatesStatus() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(10);
         leave.setEmployeeAssignmentId(100);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -139,7 +145,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void approveLeave_whenApproverIsNotManager_throwsForbidden() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(11);
         leave.setEmployeeAssignmentId(101);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -164,7 +170,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void approveLeave_whenLeaveIsNotPending_throwsConflict() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(12);
         leave.setEmployeeAssignmentId(102);
         leave.setStatus(LeaveStatus.APPROVED.getDbValue());
@@ -181,7 +187,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void rejectLeave_whenPendingAndRejectedByManager_updatesStatus() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(13);
         leave.setEmployeeAssignmentId(103);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -209,7 +215,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void rejectLeave_whenRejectedByIsNotManager_throwsForbidden() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(14);
         leave.setEmployeeAssignmentId(104);
         leave.setStatus(LeaveStatus.PENDING.getDbValue());
@@ -234,7 +240,7 @@ class EmployeeAssignmentLeaveServiceTest {
 
     @Test
     void rejectLeave_whenLeaveIsNotPending_throwsConflict() {
-        EmployeeAssignmentLeave leave = new EmployeeAssignmentLeave();
+
         leave.setLeaveId(15);
         leave.setEmployeeAssignmentId(105);
         leave.setStatus(LeaveStatus.APPROVED.getDbValue());

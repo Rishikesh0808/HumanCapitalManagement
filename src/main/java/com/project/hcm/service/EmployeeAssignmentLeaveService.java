@@ -80,6 +80,8 @@ public class EmployeeAssignmentLeaveService {
             EmployeeAssignmentLeave savedLeave = employeeAssignmentLeaveRepository.save(leave);
             return toApplyLeaveResponse(savedLeave);
 
+        } catch (ResponseStatusException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Unexpected error while creating leave", ex);
         }
@@ -89,6 +91,8 @@ public class EmployeeAssignmentLeaveService {
         try {
             return employeeAssignmentLeaveRepository.findByEmployeeAssignment_AssignmentId(employeeId);
 
+        } catch (ResponseStatusException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Unexpected error while fetching leaves", ex);
         }
@@ -105,6 +109,8 @@ public class EmployeeAssignmentLeaveService {
             leave.setRejectionReason(null);
             EmployeeAssignmentLeave savedLeave = employeeAssignmentLeaveRepository.save(leave);
             return toApproveLeaveResponse(savedLeave);
+        } catch (ResponseStatusException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Unexpected error while approving leave", ex);
         }
@@ -134,6 +140,8 @@ public class EmployeeAssignmentLeaveService {
             EmployeeAssignmentLeave savedLeave = employeeAssignmentLeaveRepository.save(leave);
             return toRejectLeaveResponse(savedLeave);
 
+        } catch (ResponseStatusException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Unexpected error while rejecting leave", ex);
         }
@@ -196,6 +204,8 @@ public class EmployeeAssignmentLeaveService {
             leave.setApprovedAt(null);
             leave.setRejectionReason(null);
             return employeeAssignmentLeaveRepository.save(leave);
+        } catch (ResponseStatusException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Unexpected error while cancelling leave", ex);
         }

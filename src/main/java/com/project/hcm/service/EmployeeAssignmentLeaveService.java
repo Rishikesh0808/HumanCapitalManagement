@@ -116,7 +116,7 @@ public class EmployeeAssignmentLeaveService {
         }
     }
 
-    private @NonNull EmployeeAssignmentLeave getEmployeeAssignmentLeave(Integer leaveId, Integer manager) {
+    private EmployeeAssignmentLeave getEmployeeAssignmentLeave(Integer leaveId, Integer manager) {
         if (leaveId == null || manager== null) {
             throw new ResponseStatusException(BAD_REQUEST, "leaveId and approvedBy are required");
         }

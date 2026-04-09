@@ -32,6 +32,8 @@ public class EmployeeServiceTest {
     @InjectMocks
     private EmployeeService employeeService;
 
+    private Employee e1
+
     @BeforeEach()
     void beforeAll() {
         e = new Employee();

@@ -32,7 +32,7 @@ public class EmployeeServiceTest {
     @InjectMocks
     private EmployeeService employeeService;
 
-    private Employee e1;
+    private Employee e1
 
     @BeforeEach()
     void beforeAll() {
